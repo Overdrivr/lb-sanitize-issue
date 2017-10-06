@@ -47,8 +47,19 @@ describe('Book API', function() {
         .get('/api/Books/' + BOOK.id + '/notes/' + NOTE.id)
         .expect(200, function(err, res) {
           if (err) return cb(err);
+          console.log(res.body);
           expect(res.body).to.not.contain.property('someOtherFieldThatShouldBeDiscarded');
           cb();
         });
+  });
+
+  it('Note instance with Node API should not contain more fields than expected', function(cb) {
+    server.models.Note.findById(NOTE.id, function(err, note) {
+      if (err) return cb(err);
+      if (!note) return cb(Error('Note could not be found'));
+      console.log(note);
+      expect(note).to.not.contain.property('someOtherFieldThatShouldBeDiscarded');
+      cb();
+    });
   });
 });
